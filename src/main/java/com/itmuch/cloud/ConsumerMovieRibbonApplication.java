@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableEurekaClient
+// 使用ribbon连接微服务"microservice-provider-user"时使用自定义的配置；其他的ribbon则使用默认的RibbonClientConfiguration配置
 @RibbonClient(name = "microservice-provider-user", configuration = TestConfiguration.class)
 @ComponentScan(excludeFilters = { @ComponentScan.Filter(type = FilterType.ANNOTATION, value = ExcludeFromComponentScan.class) })
 public class ConsumerMovieRibbonApplication {
