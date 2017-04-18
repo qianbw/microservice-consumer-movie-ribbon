@@ -1,6 +1,7 @@
 package com.itmuch.cloud.controller;
 
 import com.itmuch.cloud.entity.User;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -17,11 +18,16 @@ public class MovieController {
     private LoadBalancerClient loadBalancerClient;
 
     @GetMapping("/movie/{id}")
+    @HystrixCommand(fallbackMethod = "findByIdFallBack")
     public User findById(@PathVariable Long id) {
-        // http://localhost:7900/simple/
-        // VIP virtual IP
-        // HAProxy Heartbeat
-        return this.restTemplate.getForObject("http://microservice-provider-user/simple/" + id, User.class);
+        return this.restTemplate.getForObject("http://microservice-provider-user2/simple/" + id, User.class);
+    }
+
+    public User findByIdFallBack(Long id) {
+        User user = new User();
+        user.setId(100L);
+        user.setName("qianduoduo");
+        return user;
     }
 
     @GetMapping("/test")
